@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # DEBUG="on"
-MAXTRIPLES=200000
+MAXITER=200000
 
 RESULTSFILE=/tmp/`date +%Y%m%d-%H%M%S`.txt
 if [[ $DEBUG ]] ; then
@@ -16,8 +16,8 @@ until $(curl --output /dev/null --silent --head --fail http://data-analyzer:8175
 done
 
 curl -sS --fail --data-urlencode "action=update" --data-urlencode "queryBody=clear all" data-analyzer:8175/kb > /dev/null
-i="0"
-while [ $i -lt $MAXTRIPLES ]
+i=0
+while [ $i -lt $MAXITER ]
 do
   ts=$(date +%s%N)
   curl -G -sS --fail --data-urlencode 'query=
@@ -32,7 +32,7 @@ do
     }
     ' data-analyzer:8175/kb > /dev/null
   tt=$((($(date +%s%N) - $ts)/1000000))
-  echo $[5*$i]","$tt >> $RESULTSFILE
+  echo $[5*$i],$tt >> $RESULTSFILE
   i=$[$i+1]
   curl -sS --fail --data-urlencode "action=update" --data-urlencode 'queryBody=
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
