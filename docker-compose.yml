@@ -1,0 +1,10 @@
+data-analyzer:
+  build: ./data-analyzer
+  ports:
+    - "8175:8175"
+tester:
+  build: ./tester
+  links:
+    - data-analyzer
+  volumes:
+    - ./tester/results:/tmp
