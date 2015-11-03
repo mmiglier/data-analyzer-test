@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEBUG="off"
+# DEBUG="on"
 MAXTRIPLES=200000
 
 RESULTSFILE=/tmp/`date +%Y%m%d-%H%M%S`.txt
