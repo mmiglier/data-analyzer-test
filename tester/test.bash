@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# DEBUG="on"
-MAXTRIPLES=1000000
-STEP=100000
+DEBUG="on"
+MAXTRIPLES=100000
+STEP=5000
 FRIENDS=30
 
 MAXITER=$((MAXTRIPLES/STEP))
@@ -48,7 +48,7 @@ until $(curl --output /dev/null --silent --head --fail http://data-analyzer:8175
     sleep 5
 done
 
-curl -sS --fail --data-urlencode "action=update" --data-urlencode "queryBody=clear all" data-analyzer:8175/kb > /dev/null
+curl -sS --fail -d "action=update" -d "queryBody=clear all" data-analyzer:8175/kb > /dev/null
 i=0
 current=0
 while [ $i -lt $MAXITER ]
@@ -56,8 +56,9 @@ do
   if [[ $DEBUG ]] ; then
     echo $(createUpdateQuery $current $STEP $FRIENDS)
   fi
-  curl -sS --fail --data-urlencode "action=update" --data-urlencode "queryBody=$(createUpdateQuery $current $STEP $FRIENDS)" \
-  data-analyzer:8175/kb > /dev/null
+  echo "queryBody=$(createUpdateQuery $current $STEP $FRIENDS)" | \
+    curl -sS --fail -d "action=update" -d @- \
+    data-analyzer:8175/kb > /dev/null
   ts=$(date +%s%N)
   curl -G -sS --fail --data-urlencode 'query=
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
