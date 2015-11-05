@@ -1,5 +1,7 @@
 data-analyzer:
   build: ./data-analyzer
+  volumes:
+    - ./results:/tmp/results
   ports:
     - "8175:8175"
 tester:
@@ -7,4 +9,4 @@ tester:
   links:
     - data-analyzer
   volumes:
-    - ./tester/results:/tmp
+    - ./results:/tmp/results

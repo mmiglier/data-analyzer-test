@@ -2,13 +2,13 @@
 
 DEBUG="on"
 MAXTRIPLES=100000
-STEP=5000
-FRIENDS=30
+STEP=5000 # 10000 causes out memory overflow
+FRIENDS=50
 
 MAXITER=$((MAXTRIPLES/STEP))
-RESULTSFILE=/tmp/`date +%Y%m%d-%H%M%S`.txt
+RESULTSFILE=/tmp/results/`date +%Y%m%d-%H%M%S`-results.csv
 if [[ $DEBUG ]] ; then
-  RESULTSFILE=/tmp/debug.txt
+  RESULTSFILE=/tmp/results/debug-results.csv
   rm $RESULTSFILE
 fi
 
@@ -51,6 +51,7 @@ done
 curl -sS --fail -d "action=update" -d "queryBody=clear all" data-analyzer:8175/kb > /dev/null
 i=0
 current=0
+echo "triples,start,end,time" >> $RESULTSFILE
 while [ $i -lt $MAXITER ]
 do
   if [[ $DEBUG ]] ; then
@@ -71,8 +72,9 @@ do
       ?p rdf:type ex:Person .
     }
     ' data-analyzer:8175/kb > /dev/null
-  tt=$((($(date +%s%N) - $ts)/1000000))
-  echo $((STEP*(i+1))),$tt >> $RESULTSFILE
+  te=$(date +%s%N)
+  tt=$((($te - $ts)/1000000))
+  echo $((STEP*(i+1))),$ts,$te,$tt >> $RESULTSFILE
   current=$((current + STEP / (FRIENDS + 1) + ( STEP % (FRIENDS + 1) == 0 ? 0 : 1 ) ))
   i=$((i+1))
 done
