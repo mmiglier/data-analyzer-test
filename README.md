@@ -1,4 +1,4 @@
-# data-analyzer-test
+# Data Analyzer Test
 
 Testing the `/kb` API of the [MODAClouds Tower 4Clouds Data Analyzer](http://deib-polimi.github.io/tower4clouds/docs/data-analyzer/). The following query counting the number of friendships is run multiple times while increasing the size of the knowledge base with randomly generated persons and friendships relations:
 
