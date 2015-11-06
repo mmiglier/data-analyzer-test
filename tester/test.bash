@@ -48,10 +48,13 @@ until $(curl --output /dev/null --silent --head --fail http://data-analyzer:8175
     sleep 5
 done
 
+echo "Clearing data analyzer"
 curl -sS --fail -d "action=update" -d "queryBody=clear all" data-analyzer:8175/kb > /dev/null
 i=0
 current=0
 echo "triples,start,end,time" >> $RESULTSFILE
+
+echo "Starting feeding"
 while [ $i -lt $MAXITER ]
 do
   if [[ $DEBUG ]] ; then
